@@ -3,8 +3,8 @@ window.addEventListener('DOMContentLoaded', () => {
     let canvas = document.getElementById('myCanvas')
     let asteroid = canvas.getContext('2d')
     
-    let x = canvas.width/2
-    let y = canvas.height-30
+    let x = 0
+    let y = Math.floor(Math.random() * 600)
     let dx = 2
     let dy = -2
 
@@ -16,7 +16,17 @@ window.addEventListener('DOMContentLoaded', () => {
         asteroid.closePath()
         x += dx
         y += dy
+        console.log(`x= ${x}`)
+        console.log(y)
+        if (x > 1300 || x < -100 || y > 700 || y < -100) {
+            y = Math.floor(Math.random() * 600)
+            x = 0
+            dx = Math.floor(Math.random() * 5)
+            dy = Math.floor(Math.random() * -2)
+        }
+        
     }
+
 
     setInterval(moveAsteroid, 10)
 
