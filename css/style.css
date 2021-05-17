@@ -17,3 +17,11 @@ canvas {
 * {
     cursor: crosshair;
 }
+
+#asteroid {
+    display: none;
+}
+
+#planet {
+    display: none;
+}

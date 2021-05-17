@@ -4,6 +4,8 @@ window.addEventListener('DOMContentLoaded', () => {
     let canvas = document.getElementById('myCanvas')
     let ctx = canvas.getContext('2d')
 
+    let imgAsteroid = document.getElementById('asteroid')
+    let imgPlanet = document.getElementById('planet')
     let health= 100
     let x = -100
     let y = Math.floor(Math.random() * 600)
@@ -51,14 +53,13 @@ window.addEventListener('DOMContentLoaded', () => {
         ctx.arc(planetX, planetY, planetRadius, 0, Math.PI*2);
         ctx.fillStyle = 'green'
         ctx.fill()
-        ctx.closePath
+        ctx.closePath()
     }
     
 
     function drawAsteroid() {
         ctx.beginPath()
-        ctx.fillStyle = 'red'
-        ctx.fillRect(x, y, 30, 30)
+        ctx.drawImage(imgAsteroid, x, y, 50, 50)
         ctx.fill()
         ctx.closePath()
         if (x > 1300 || x < -100 || y > 700 || y < -100) {
@@ -70,8 +71,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     function drawAsteroid2() {
         ctx.beginPath()
-        ctx.fillStyle = 'blue'
-        ctx.fillRect(x2, y2, 30, 30)
+        ctx.drawImage(imgAsteroid, x2, y2, 40, 40)
         ctx.fill()
         ctx.closePath()
         if (x2 > 1300 || x2 < -100 || y2 > 700 || y2 < -100) {
@@ -121,7 +121,7 @@ window.addEventListener('DOMContentLoaded', () => {
             checkClick(canvas, e);
         });
 
-    let interval = setInterval(move, 5)
+    let interval = setInterval(move, 50)
 
 
 
