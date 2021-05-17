@@ -11,4 +11,9 @@ canvas {
     background-color: lightgray;
     margin: 0 auto;
     display: block;
+    cursor:hand;    
+}
+
+* {
+    cursor: crosshair;
 }
