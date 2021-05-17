@@ -1,8 +1,10 @@
 window.addEventListener('DOMContentLoaded', () => {
 
+
     let canvas = document.getElementById('myCanvas')
     let ctx = canvas.getContext('2d')
-    
+
+    let health= 100
     let x = -100
     let y = Math.floor(Math.random() * 600)
     let dx = 2
@@ -17,6 +19,33 @@ window.addEventListener('DOMContentLoaded', () => {
     let planetX = 600
     let planetY = 300
 
+    function drawScore() {
+        ctx.font = '16px Arial'
+        ctx.fillStyle = 'red'
+        ctx.fillText('Health: ' + health, 550, 550)
+    }
+
+    function collisionDetection() {
+        if ((planetX + 20) > (x) && (planetX - 20) < (x + 30) && (planetY + 20) > (y) && (planetY - 20) < (y + 30)) {
+            y = Math.floor(Math.random() * 600)
+            x = -100
+            dx = 4
+            dy = Math.ceil(Math.random() * 4) - 2
+            health = health - 25
+        }
+        if ((planetX + 20) > (x2) && (planetX - 20) < (x2 + 30) && (planetY + 20) > (y2) && (planetY - 20) < (y2 + 30)) {
+            y2 = Math.floor(Math.random() * 600)
+            x2 = -100
+            dx2 = 4
+            dy2 = Math.ceil(Math.random() * 4) - 2
+            health = health - 25
+        }   
+        if (health === 0) {
+            alert('You lose ☠️')
+            clearInterval(interval)
+        }
+    }
+
     function drawPlanet () {
         ctx.beginPath()
         ctx.arc(planetX, planetY, planetRadius, 0, Math.PI*2);
@@ -24,8 +53,6 @@ window.addEventListener('DOMContentLoaded', () => {
         ctx.fill()
         ctx.closePath
     }
-
-
     
 
     function drawAsteroid() {
@@ -60,10 +87,13 @@ window.addEventListener('DOMContentLoaded', () => {
         drawAsteroid()
         drawAsteroid2()
         drawPlanet()
+        collisionDetection()
+        drawScore()
         x += dx
         y += dy
         x2 += dx2
         y2 += dy2
+
     }
 
     // repositions the asteroids on click
@@ -89,23 +119,9 @@ window.addEventListener('DOMContentLoaded', () => {
         canvas.addEventListener("mousedown", function(e)
         {
             checkClick(canvas, e);
-            checkClick2(canvas, e);
         });
-        
 
-    function checkClick2(event) {
-        if (event.clientX > (x2 + 5) && event.clientX < (x2 + 37) && event.clientY > (y2 + 5) && event.clientY < (y2 + 37)) {
-        y2 = Math.floor(Math.random() * 600)
-        x2 = -100
-        dx2 = 4
-        dy2 = Math.ceil(Math.random() * 4) - 2
-        }
-      }
-
-      
-
-
-    setInterval(move, 100)
+    let interval = setInterval(move, 5)
 
 
 
