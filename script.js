@@ -66,15 +66,33 @@ window.addEventListener('DOMContentLoaded', () => {
         y2 += dy2
     }
 
-    
-    function checkClick(event) {
-        if (event.clientX > (x + 5) && event.clientX < (x + 37) && event.clientY > (y + 5) && event.clientY < (y + 37)) {
-        y = Math.floor(Math.random() * 600)
-        x = -100
-        dx = 4
-        dy = Math.ceil(Math.random() * 4) - 2
+    // repositions the asteroids on click
+    function checkClick(canvas, event) {
+        let rect = canvas.getBoundingClientRect();
+        let xPosition = event.clientX - rect.left;
+        let yPosition = event.clientY - rect.top;
+
+        if (xPosition > (x) && xPosition< (x + 30) && yPosition > (y) && yPosition < (y + 30)) {
+            y = Math.floor(Math.random() * 600)
+            x = -100
+            dx = 4
+            dy = Math.ceil(Math.random() * 4) - 2
         }
-      }
+        if (xPosition > (x2) && xPosition< (x2 + 30) && yPosition > (y2) && yPosition < (y2 + 30)) {
+            y2 = Math.floor(Math.random() * 600)
+            x2 = -100
+            dx2 = 4
+            dy2 = Math.ceil(Math.random() * 4) - 2
+        }
+    }
+          
+        canvas.addEventListener("mousedown", function(e)
+        {
+            checkClick(canvas, e);
+            checkClick2(canvas, e);
+        });
+        
+
     function checkClick2(event) {
         if (event.clientX > (x2 + 5) && event.clientX < (x2 + 37) && event.clientY > (y2 + 5) && event.clientY < (y2 + 37)) {
         y2 = Math.floor(Math.random() * 600)
@@ -85,8 +103,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }
 
       
-      document.addEventListener("click", checkClick);
-      document.addEventListener("click", checkClick2);
 
 
     setInterval(move, 100)
