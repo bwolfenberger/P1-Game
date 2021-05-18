@@ -7,11 +7,14 @@ window.addEventListener('DOMContentLoaded', () => {
     let imgAsteroid = document.getElementById('asteroid')
     let imgPlanet = document.getElementById('planet')
     let health = 100
-    let score = 0
+    let score = 50
     let x = -100
     let y = Math.floor(Math.random() * 600)
     let dx = 2
     let dy = 0
+
+    let shieldLocationX = 300
+    let shieldLocationY = 550
 
     let x2 = -100
     let y2 = Math.floor(Math.random() * 600)
@@ -30,10 +33,15 @@ window.addEventListener('DOMContentLoaded', () => {
     let distance2Y = planetTarget.y - asteroid2Target.y
     let distance2 = Math.sqrt(distance2X * distance2X + distance2Y * distance2Y)
 
-
-
     let planetX = 500
     let planetY = 150
+
+
+    function drawShield() {
+        ctx.font = '16px Arial'
+        ctx.fillStyle = 'green'
+        ctx.fillText('Trade 25 health for 25 points', shieldLocationX, shieldLocationY)
+    }
 
     function drawHealth() {
         ctx.font = '16px Arial'
@@ -74,6 +82,9 @@ window.addEventListener('DOMContentLoaded', () => {
         if (health === 0) {
             alert('You lose ☠️')
             clearInterval(interval)
+            interval = setInterval(move, 10)
+            health = 100
+            score = 0
         }
     }
 
@@ -117,6 +128,7 @@ window.addEventListener('DOMContentLoaded', () => {
         collisionDetection()
         drawHealth()
         drawScore()
+        drawShield()
         x += dx
         y += dy
         x2 += dx2
@@ -146,6 +158,12 @@ window.addEventListener('DOMContentLoaded', () => {
             dy2 = Math.ceil(Math.random() * 4) - 2
             score = score + 10
         }
+        if (score >= 25) {
+            if (xPosition > (shieldLocationX) && xPosition< (shieldLocationX + 200) && yPosition < (shieldLocationY) && yPosition > (shieldLocationY - 20)) {
+                score = score - 25
+                health = health + 25
+            }
+        }    
     }
           
         canvas.addEventListener("mousedown", function(e)
@@ -153,7 +171,7 @@ window.addEventListener('DOMContentLoaded', () => {
             checkClick(canvas, e);
         });
 
-    let interval = setInterval(move, 5)
+    let interval = setInterval(move, 10)
 
 
 
