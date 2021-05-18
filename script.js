@@ -6,7 +6,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     let imgAsteroid = document.getElementById('asteroid')
     let imgPlanet = document.getElementById('planet')
-    let health= 100
+    let health = 100
+    let score = 0
     let x = -100
     let y = Math.floor(Math.random() * 600)
     let dx = 2
@@ -17,14 +18,21 @@ window.addEventListener('DOMContentLoaded', () => {
     let dx2 = 2
     let dy2 = -2
 
-    let planetRadius = 40
-    let planetX = 600
-    let planetY = 300
+    let planetTarget = {radius: 85, x: 600, y: 250}
+    let asteroidTarget = {radius: 20, x: x, y: y}
+    let asteroid2Target = {radius: 17, x: x2, y: y2}
+    let planetX = 500
+    let planetY = 150
 
-    function drawScore() {
+    function drawHealth() {
         ctx.font = '16px Arial'
         ctx.fillStyle = 'red'
         ctx.fillText('Health: ' + health, 550, 550)
+    }
+    function drawScore() {
+        ctx.font = '16px Arial'
+        ctx.fillStyle = 'red'
+        ctx.fillText('Score: ' + score, 700, 550)
     }
 
     function collisionDetection() {
@@ -50,9 +58,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function drawPlanet () {
         ctx.beginPath()
-        ctx.arc(planetX, planetY, planetRadius, 0, Math.PI*2);
-        ctx.fillStyle = 'green'
-        ctx.fill()
+        ctx.drawImage(imgPlanet, planetX, planetY, 200, 200)
         ctx.closePath()
     }
     
@@ -88,6 +94,7 @@ window.addEventListener('DOMContentLoaded', () => {
         drawAsteroid2()
         drawPlanet()
         collisionDetection()
+        drawHealth()
         drawScore()
         x += dx
         y += dy
@@ -101,18 +108,22 @@ window.addEventListener('DOMContentLoaded', () => {
         let rect = canvas.getBoundingClientRect();
         let xPosition = event.clientX - rect.left;
         let yPosition = event.clientY - rect.top;
+        console.log(`x= ${x} and y= ${y}`)
+        console.log(`x click= ${xPosition} and y click= ${yPosition}`)
 
         if (xPosition > (x) && xPosition< (x + 30) && yPosition > (y) && yPosition < (y + 30)) {
             y = Math.floor(Math.random() * 600)
             x = -100
             dx = 4
             dy = Math.ceil(Math.random() * 4) - 2
+            score = score + 10
         }
         if (xPosition > (x2) && xPosition< (x2 + 30) && yPosition > (y2) && yPosition < (y2 + 30)) {
             y2 = Math.floor(Math.random() * 600)
             x2 = -100
             dx2 = 4
             dy2 = Math.ceil(Math.random() * 4) - 2
+            score = score + 10
         }
     }
           
