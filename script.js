@@ -37,15 +37,19 @@ window.addEventListener('DOMContentLoaded', () => {
     let planetY = 150
 
 
+    
+
 
     class Asteroid {
-        constructor(imgSrc, xPos, yPos, x, y, radius) {
+        constructor(imgSrc, xPos, yPos, x, y, radius, xSpeed, ySpeed) {
             this.imgSrc = imgSrc
             this.xPos = xPos
             this.yPos = yPos
             this.x = x
             this.y = y
             this.radius = radius
+            this.xSpeed = xSpeed
+            this.ySpeed = ySpeed
         }
 
         drawAst() {
@@ -53,24 +57,30 @@ window.addEventListener('DOMContentLoaded', () => {
             ctx.drawImage(this.imgSrc, this.xPos, this.yPos, this.x, this.y)
             ctx.fill()
             ctx.closePath()
+            this.xPos = this.xPos + this.xSpeed
+            this.yPos = this.yPos + this.ySpeed
+            // resets Object position if offscreen
+            if (this.xPos > 1300 || this.xPos < -100 || this.yPos > 700 || this.yPos < -100) {
+                this.yPos = Math.floor(Math.random() * 600)
+                this.xPos = 0
+                this.xSpeed = 4
+                this.ySpeed = Math.ceil(Math.random() * 4) - 2
+            }
+    
         }
 
+
     }
-    let a1 = new Asteroid(imgAsteroid, 100, 100, 100, 100, 50)    
-    a1.drawAst()
+    let a1 = new Asteroid(imgAsteroid, 50, 50, 50, 50, 50, 2, 2)   
+    let planet1 = new Asteroid(imgPlanet, 500, 150, 200, 200, 80, 0, 0) 
     console.log(a1)
 
-    // function drawAsteroid() {
+
+    // function drawPlanet () {
     //     ctx.beginPath()
-    //     ctx.drawImage(imgAsteroid, x, y, 50, 50)
-    //     ctx.fill()
+    //     ctx.drawImage(imgPlanet, planetX, planetY, 200, 200)
     //     ctx.closePath()
-    //     if (x > 1300 || x < -100 || y > 700 || y < -100) {
-    //         y = Math.floor(Math.random() * 600)
-    //         x = 0
-    //         dx = 4
-    //         dy = Math.ceil(Math.random() * 4) - 2
-    //     }
+    // }
 
 
 
@@ -157,8 +167,10 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // function move () {
-    //     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    function move () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        a1.drawAst()
+        planet1.drawAst()
     //     drawAsteroid()
     //     drawAsteroid2()
     //     drawPlanet()
@@ -171,7 +183,7 @@ window.addEventListener('DOMContentLoaded', () => {
     //     x2 += dx2
     //     y2 += dy2
 
-    // }
+    }
 
     // repositions the asteroids on click
     function checkClick(canvas, event) {
@@ -208,7 +220,7 @@ window.addEventListener('DOMContentLoaded', () => {
             checkClick(canvas, e);
         });
 
-    // let interval = setInterval(move, 10)
+    let interval = setInterval(move, 10)
 
 
 
