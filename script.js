@@ -37,6 +37,43 @@ window.addEventListener('DOMContentLoaded', () => {
     let planetY = 150
 
 
+
+    class Asteroid {
+        constructor(imgSrc, xPos, yPos, x, y, radius) {
+            this.imgSrc = imgSrc
+            this.xPos = xPos
+            this.yPos = yPos
+            this.x = x
+            this.y = y
+            this.radius = radius
+        }
+
+        drawAst() {
+            ctx.beginPath()
+            ctx.drawImage(this.imgSrc, this.xPos, this.yPos, this.x, this.y)
+            ctx.fill()
+            ctx.closePath()
+        }
+
+    }
+    let a1 = new Asteroid(imgAsteroid, 100, 100, 100, 100, 50)    
+    a1.drawAst()
+    console.log(a1)
+
+    // function drawAsteroid() {
+    //     ctx.beginPath()
+    //     ctx.drawImage(imgAsteroid, x, y, 50, 50)
+    //     ctx.fill()
+    //     ctx.closePath()
+    //     if (x > 1300 || x < -100 || y > 700 || y < -100) {
+    //         y = Math.floor(Math.random() * 600)
+    //         x = 0
+    //         dx = 4
+    //         dy = Math.ceil(Math.random() * 4) - 2
+    //     }
+
+
+
     function drawShield() {
         ctx.font = '16px Arial'
         ctx.fillStyle = 'green'
@@ -120,21 +157,21 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function move () {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        drawAsteroid()
-        drawAsteroid2()
-        drawPlanet()
-        collisionDetection()
-        drawHealth()
-        drawScore()
-        drawShield()
-        x += dx
-        y += dy
-        x2 += dx2
-        y2 += dy2
+    // function move () {
+    //     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    //     drawAsteroid()
+    //     drawAsteroid2()
+    //     drawPlanet()
+    //     collisionDetection()
+    //     drawHealth()
+    //     drawScore()
+    //     drawShield()
+    //     x += dx
+    //     y += dy
+    //     x2 += dx2
+    //     y2 += dy2
 
-    }
+    // }
 
     // repositions the asteroids on click
     function checkClick(canvas, event) {
@@ -171,7 +208,7 @@ window.addEventListener('DOMContentLoaded', () => {
             checkClick(canvas, e);
         });
 
-    let interval = setInterval(move, 10)
+    // let interval = setInterval(move, 10)
 
 
 
