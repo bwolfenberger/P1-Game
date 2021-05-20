@@ -7,11 +7,30 @@ window.addEventListener('DOMContentLoaded', () => {
     let imgAsteroid = document.getElementById('asteroid')
     let imgPlanet = document.getElementById('planet')
     
-    // let shieldLocationX = 300
-    // let shieldLocationY = 550
-    // let health = 100
-    // let score = 50
+    let tradeLocationX = 300
+    let tradeLocationY = 550
+    let health = 100
+    let score = 2250
     
+
+    function drawTrade() {
+        ctx.font = '16px Arial'
+        ctx.fillStyle = 'green'
+        ctx.fillText('Trade 25 health for 25 points', tradeLocationX, tradeLocationY)
+    }
+
+    function drawHealth() {
+        ctx.font = '16px Arial'
+        ctx.fillStyle = 'red'
+        ctx.fillText('Health: ' + health, 550, 550)
+    }
+
+    function drawScore() {
+        ctx.font = '16px Arial'
+        ctx.fillStyle = 'red'
+        ctx.fillText('Score: ' + score, 700, 550)
+    }
+
 
 
     class Object {
@@ -41,8 +60,6 @@ window.addEventListener('DOMContentLoaded', () => {
             if (this.xPos > 1300 || this.xPos < -100 || this.yPos > 700 || this.yPos < -100) {
                 this.yPos = Math.floor(Math.random() * 600)
                 this.ySpeed = Math.ceil(Math.random() * 4) - 2
-                // this.xPos = -100
-                // this.ySpeed = Math.ceil(Math.random() * 4) - 2
                 if (this.yPos%2 == 0) {
                     this.xPos = -100
                 } else {
@@ -52,7 +69,7 @@ window.addEventListener('DOMContentLoaded', () => {
         
             }
         }
-
+        // increased speed of asteroids each interval
         increaseSpeed() {
             if (this.xSpeed > 0) {
                 this.xSpeed = this.xSpeed + .01
@@ -75,7 +92,17 @@ window.addEventListener('DOMContentLoaded', () => {
                     this.xPos = 1300
                 }
 
-            //     health = health - 25 // damage should be equal to the size of the asteroid
+                health = health - 25 // damage should be equal to the size of the asteroid
+
+                if (health === 0) {
+                    alert('You lose ☠️')
+                    clearInterval(interval)
+                    interval = setInterval(move, 50)
+                    health = 100
+                    score = 0
+                }
+
+
             }
         }
 
@@ -83,7 +110,7 @@ window.addEventListener('DOMContentLoaded', () => {
             let rect = canvas.getBoundingClientRect();
             let xMousePosition = event.clientX - rect.left;
             let yMousePosition = event.clientY - rect.top;
-            console.log(`x click= ${xMousePosition} and y click= ${yMousePosition}`)
+            // console.log(`x click= ${xMousePosition} and y click= ${yMousePosition}`)
 
             if (xMousePosition > (this.xTarget - this.radius) && xMousePosition < (this.xTarget + this.radius) && yMousePosition > (this.yTarget - this.radius) && yMousePosition < (this.yTarget + this.radius)) {
                 this.yPos = Math.floor(Math.random() * 600)
@@ -95,18 +122,18 @@ window.addEventListener('DOMContentLoaded', () => {
                     this.xPos = 1300
                 }
     
-                // score = score + 10
+                score = score + 10
             }
+
 
         }
 
     }
-    // let a1 = new Object(imgAsteroid, 50, 50, 50, 50, 0, 0, 0, 3, 2)
     let planet1 = new Object(imgPlanet, 500, 150, 200, 200, 80, 0, 0, 0, 0) 
     
     var asteroids = []
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
         let yPos = Math.floor(Math.random() * 600)
         let xPos = -100
         let xSpeed = 3
@@ -130,39 +157,58 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function move () {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
-        // a1.draw()
+
         asteroids.forEach(element => {
             element.draw()
         })
+
         planet1.draw()
-        // a1.collisionDetection()
+
         asteroids.forEach(element => {
             element.collisionDetection()
         })
-        asteroids.forEach(element => {
-            element.increaseSpeed()
-        })
+
+        // asteroids.forEach(element => {
+        //     element.increaseSpeed()
+        // })
+
+        drawHealth()
+        drawScore()
+        drawTrade()
+
     }
 
-    // function speed () {
-    //     asteroids.forEach(element => {
-    //         element.increaseSpeed()
-    //     })
-    //     console.log(asteroids[0].xSpeed)
-    // }
+
+    function checkClick2(canvas, event) {
+        let rect = canvas.getBoundingClientRect();
+        let xMousePosition = event.clientX - rect.left;
+        let yMousePosition = event.clientY - rect.top;
+        console.log(`x click= ${xMousePosition} and y click= ${yMousePosition}`)
+
+        if (score >= 25 && xMousePosition > (tradeLocationX) && xMousePosition< (tradeLocationX + 200) && yMousePosition < (tradeLocationY) && yMousePosition > (tradeLocationY - 20)) {
+            score = score - 25
+            health = health + 25
+        }
+
+
+    }
+
 
         canvas.addEventListener("mousedown", function(e)
         {
             asteroids.forEach(element => {
                 element.checkClick(canvas, e)
             })
+            checkClick2(canvas, e)
         });
 
-    let moveInterval = setInterval(move, 50)
-    // let speedInterval = setInterval(speed, 300)
+    let interval = setInterval(move, 50)
 
+
+    
 })
 
+// let speedInterval = setInterval(speed, 300)
 
     // let x = -100
     // let y = Math.floor(Math.random() * 600)
