@@ -158,7 +158,7 @@ window.addEventListener('DOMContentLoaded', () => {
             })
         });
 
-    // let moveInterval = setInterval(move, 50)
+    let moveInterval = setInterval(move, 50)
     // let speedInterval = setInterval(speed, 300)
 
 })
