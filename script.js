@@ -6,37 +6,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     let imgAsteroid = document.getElementById('asteroid')
     let imgPlanet = document.getElementById('planet')
-    // let health = 100
-    // let score = 50
-    // let x = -100
-    // let y = Math.floor(Math.random() * 600)
-    // let dx = 2
-    // let dy = 0
-
+    
     // let shieldLocationX = 300
     // let shieldLocationY = 550
-
-    // let x2 = -100
-    // let y2 = Math.floor(Math.random() * 600)
-    // let dx2 = 2
-    // let dy2 = -2
-
-    // // circle colllision detection
-    // let planetTarget = {radius: 80, x: 600, y: 250}
-    // let asteroidTarget = {radius: 20, x: x, y: y}
-    // let distanceX = planetTarget.x - asteroidTarget.x
-    // let distanceY = planetTarget.y - asteroidTarget.y
-    // let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY)
-    
-    // let asteroid2Target = {radius: 17, x: x2, y: y2}
-    // let distance2X = planetTarget.x - asteroid2Target.x
-    // let distance2Y = planetTarget.y - asteroid2Target.y
-    // let distance2 = Math.sqrt(distance2X * distance2X + distance2Y * distance2Y)
-
-    // let planetX = 500
-    // let planetY = 150
-
-
+    // let health = 100
+    // let score = 50
     
 
 
@@ -82,20 +56,26 @@ window.addEventListener('DOMContentLoaded', () => {
                 this.xSpeed = 4
                 this.ySpeed = Math.ceil(Math.random() * 4) - 2
 
-            // planetTarget = {radius: 80, x: 600, y: 250}
-            // asteroidTarget = {radius: 20, x: x, y: y}
-            // distanceX = planetTarget.x - asteroidTarget.x
-            // distanceY = planetTarget.y - asteroidTarget.y
-            // distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY)
-            // if (distance < planetTarget.radius + asteroidTarget.radius) {
-            //     y = Math.floor(Math.random() * 600)
-            //     x = -100
-            //     dx = 4
-            //     dy = Math.ceil(Math.random() * 4) - 2
             //     health = health - 25
-            // }
-
             }
+        }
+
+        checkClick(canvas, event) {
+            let rect = canvas.getBoundingClientRect();
+            let xMousePosition = event.clientX - rect.left;
+            let yMousePosition = event.clientY - rect.top;
+            // console.log(`x= ${x} and y= ${y}`)
+            console.log(`x click= ${xMousePosition} and y click= ${yMousePosition}`)
+
+            if (xMousePosition > (this.xTarget - this.radius) && xMousePosition < (this.xTarget + this.radius) && yMousePosition > (this.yTarget - this.radius) && yMousePosition < (this.yTarget + this.radius)) {
+                this.yPos = Math.floor(Math.random() * 600)
+                this.xPos = -100
+                this.xSpeed = 4
+                this.ySpeed = Math.ceil(Math.random() * 4) - 2
+
+                // score = score + 10
+            }
+
         }
 
     }
@@ -104,6 +84,51 @@ window.addEventListener('DOMContentLoaded', () => {
     // let a3 = new Asteroid(imgAsteroid, 50, 50, 50, 50, 50, 0, 0, 1, 2)
 
     let planet1 = new Asteroid(imgPlanet, 500, 150, 200, 200, 80, 0, 0, 0, 0) 
+
+
+    function move () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        a1.drawAst()
+        // a2.drawAst()
+        // a3.drawAst()
+        planet1.drawAst()
+        a1.collisionDetectionAst()
+    }
+
+        canvas.addEventListener("mousedown", function(e)
+        {
+            a1.checkClick(canvas, e);
+        });
+
+    let interval = setInterval(move, 50)
+
+})
+
+
+    // let x = -100
+    // let y = Math.floor(Math.random() * 600)
+    // let dx = 2
+    // let dy = 0
+
+    // let x2 = -100
+    // let y2 = Math.floor(Math.random() * 600)
+    // let dx2 = 2
+    // let dy2 = -2
+
+    // // circle colllision detection
+    // let planetTarget = {radius: 80, x: 600, y: 250}
+    // let asteroidTarget = {radius: 20, x: x, y: y}
+    // let distanceX = planetTarget.x - asteroidTarget.x
+    // let distanceY = planetTarget.y - asteroidTarget.y
+    // let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY)
+    
+    // let asteroid2Target = {radius: 17, x: x2, y: y2}
+    // let distance2X = planetTarget.x - asteroid2Target.x
+    // let distance2Y = planetTarget.y - asteroid2Target.y
+    // let distance2 = Math.sqrt(distance2X * distance2X + distance2Y * distance2Y)
+
+    // let planetX = 500
+    // let planetY = 150
 
 
 
@@ -199,13 +224,13 @@ window.addEventListener('DOMContentLoaded', () => {
     //     }
     // }
 
-    function move () {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        a1.drawAst()
-        // a2.drawAst()
-        // a3.drawAst()
-        planet1.drawAst()
-        a1.collisionDetectionAst()
+    // function move () {
+    //     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    //     a1.drawAst()
+    //     // a2.drawAst()
+    //     // a3.drawAst()
+    //     planet1.drawAst()
+    //     a1.collisionDetectionAst()
     //     drawAsteroid()
     //     drawAsteroid2()
     //     drawPlanet()
@@ -218,16 +243,15 @@ window.addEventListener('DOMContentLoaded', () => {
     //     x2 += dx2
     //     y2 += dy2
 
-    }
+    // }
 
     // repositions the asteroids on click
-    function checkClick(canvas, event) {
-        let rect = canvas.getBoundingClientRect();
-        let xPosition = event.clientX - rect.left;
-        let yPosition = event.clientY - rect.top;
-        // console.log(`x= ${x} and y= ${y}`)
-        console.log(planet1)
-        console.log(`x click= ${xPosition} and y click= ${yPosition}`)
+    // function checkClick(canvas, event) {
+    //     let rect = canvas.getBoundingClientRect();
+    //     let xPosition = event.clientX - rect.left;
+    //     let yPosition = event.clientY - rect.top;
+    //     // console.log(`x= ${x} and y= ${y}`)
+    //     console.log(`x click= ${xPosition} and y click= ${yPosition}`)
 
     //     if (xPosition > (x) && xPosition< (x + 30) && yPosition > (y) && yPosition < (y + 30)) {
     //         y = Math.floor(Math.random() * 600)
@@ -249,14 +273,14 @@ window.addEventListener('DOMContentLoaded', () => {
     //             health = health + 25
     //         }
     //     }    
-    }
+    // }
           
-        canvas.addEventListener("mousedown", function(e)
-        {
-            checkClick(canvas, e);
-        });
+    //     canvas.addEventListener("mousedown", function(e)
+    //     {
+    //         a1.checkClick(canvas, e);
+    //     });
 
-    let interval = setInterval(move, 50)
+    // let interval = setInterval(move, 50)
 
 
 
@@ -273,7 +297,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Decrease health upon colision
 
 
-})
+// })
 
 
 
