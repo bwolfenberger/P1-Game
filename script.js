@@ -96,21 +96,37 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 if (health === 0) {
                     alert('You lose ☠️')
+
+                    
+                    asteroids.forEach(element => {
+                    element.resetVariables()
+                    })
+                    
                     clearInterval(interval)
                     interval = setInterval(move, 50)
                     health = 100
                     score = 0
                 }
-
-
+                
+                
             }
+        }
+        
+        resetVariables() {
+            this.yPos = Math.floor(Math.random() * 600)
+            this.ySpeed = Math.ceil(Math.random() * 4) - 2
+            if (this.yPos%2 == 0) {
+                this.xPos = -100
+            } else {
+                this.xPos = 1300
+            }
+            
         }
 
         checkClick(canvas, event) {
             let rect = canvas.getBoundingClientRect();
             let xMousePosition = event.clientX - rect.left;
             let yMousePosition = event.clientY - rect.top;
-            // console.log(`x click= ${xMousePosition} and y click= ${yMousePosition}`)
 
             if (xMousePosition > (this.xTarget - this.radius) && xMousePosition < (this.xTarget + this.radius) && yMousePosition > (this.yTarget - this.radius) && yMousePosition < (this.yTarget + this.radius)) {
                 this.yPos = Math.floor(Math.random() * 600)
@@ -133,7 +149,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
     var asteroids = []
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
         let yPos = Math.floor(Math.random() * 600)
         let xPos = -100
         let xSpeed = 3
@@ -157,20 +173,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function move () {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
-
+        
         asteroids.forEach(element => {
             element.draw()
         })
-
+        
         planet1.draw()
-
+        
         asteroids.forEach(element => {
             element.collisionDetection()
         })
 
-        // asteroids.forEach(element => {
-        //     element.increaseSpeed()
-        // })
+        asteroids.forEach(element => {
+            element.increaseSpeed()
+        })
 
         drawHealth()
         drawScore()
