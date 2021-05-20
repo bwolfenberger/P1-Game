@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
 
-
     let canvas = document.getElementById('myCanvas')
     let ctx = canvas.getContext('2d')
 
@@ -10,9 +9,8 @@ window.addEventListener('DOMContentLoaded', () => {
     let tradeLocationX = 300
     let tradeLocationY = 550
     let health = 100
-    let score = 2250
+    let score = 0
     
-
     function drawTrade() {
         ctx.font = '16px Arial'
         ctx.fillStyle = 'green'
@@ -30,8 +28,6 @@ window.addEventListener('DOMContentLoaded', () => {
         ctx.fillStyle = 'red'
         ctx.fillText('Score: ' + score, 700, 550)
     }
-
-
 
     class Object {
         constructor(imgSrc, xPos, yPos, xSize, ySize, radius, xTarget, yTarget, xSpeed, ySpeed) {
@@ -58,17 +54,10 @@ window.addEventListener('DOMContentLoaded', () => {
             this.yTarget = this.yPos + (this.ySize/2)
             // resets Object position if offscreen
             if (this.xPos > 1300 || this.xPos < -100 || this.yPos > 700 || this.yPos < -100) {
-                this.yPos = Math.floor(Math.random() * 600)
-                this.ySpeed = Math.ceil(Math.random() * 4) - 2
-                if (this.yPos%2 == 0) {
-                    this.xPos = -100
-                } else {
-                    this.xPos = 1300
-                }
-
-        
+                this.resetPositions()
             }
         }
+
         // increased speed of asteroids each interval
         increaseSpeed() {
             if (this.xSpeed > 0) {
@@ -83,36 +72,30 @@ window.addEventListener('DOMContentLoaded', () => {
             let distanceYA1 = planet1.yTarget - this.yTarget
             let distanceA1 = Math.sqrt(distanceXA1 * distanceXA1 + distanceYA1 * distanceYA1)
             if (distanceA1 < planet1.radius + this.radius) {
-                this.yPos = Math.floor(Math.random() * 600)
-                this.ySpeed = Math.ceil(Math.random() * 4) - 2
+                this.resetPositions()
+                health = health - Math.round(this.radius) // damage is equal to the size of the asteroid
 
-                if (this.yPos%2 == 0) {
-                    this.xPos = -100
-                } else {
-                    this.xPos = 1300
-                }
-
-                health = health - 25 // damage should be equal to the size of the asteroid
-
-                if (health === 0) {
-                    alert('You lose ☠️')
-
-                    
+                if (health <= 0) {  
                     asteroids.forEach(element => {
-                    element.resetVariables()
+                        element.resetPositions()
+                    })
+
+                    asteroids.forEach(element => {
+                        element.resetSpeed()
                     })
                     
+                    alert('You lose ☠️')
                     clearInterval(interval)
-                    interval = setInterval(move, 50)
                     health = 100
                     score = 0
+                    interval = setInterval(move, 50)
+
                 }
-                
-                
             }
         }
         
-        resetVariables() {
+        // resets all asteroid offscreen
+        resetPositions() {
             this.yPos = Math.floor(Math.random() * 600)
             this.ySpeed = Math.ceil(Math.random() * 4) - 2
             if (this.yPos%2 == 0) {
@@ -120,7 +103,14 @@ window.addEventListener('DOMContentLoaded', () => {
             } else {
                 this.xPos = 1300
             }
-            
+        }
+
+        resetSpeed() {
+            if (this.yPos%2 == 0) {
+                this.xSpeed = 3
+            } else {
+                this.xSpeed = -3
+            }
         }
 
         checkClick(canvas, event) {
@@ -129,21 +119,10 @@ window.addEventListener('DOMContentLoaded', () => {
             let yMousePosition = event.clientY - rect.top;
 
             if (xMousePosition > (this.xTarget - this.radius) && xMousePosition < (this.xTarget + this.radius) && yMousePosition > (this.yTarget - this.radius) && yMousePosition < (this.yTarget + this.radius)) {
-                this.yPos = Math.floor(Math.random() * 600)
-                this.ySpeed = Math.ceil(Math.random() * 4) - 2
-
-                if (this.yPos%2 == 0) {
-                    this.xPos = -100
-                } else {
-                    this.xPos = 1300
-                }
-    
+                this.resetPositions()
                 score = score + 10
             }
-
-
         }
-
     }
     let planet1 = new Object(imgPlanet, 500, 150, 200, 200, 80, 0, 0, 0, 0) 
     
@@ -162,9 +141,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         let xSize = Math.floor(Math.random() * 40) + 40
         let ySize = xSize
-        let radius = xSize / 2.5 // radius is equal to xSize/2.5
-        let xTarget = xPos + (xSize/2) // xTarget is equal to 
-        let yTarget = yPos + (ySize/2) // yTarget is equal to 
+        let radius = xSize / 2.5
+        let xTarget = xPos + (xSize/2)
+        let yTarget = yPos + (ySize/2)
         let ySpeed = Math.ceil(Math.random() * 4) - 2
         
         let asteroid = new Object(imgAsteroid, xPos, yPos, xSize, ySize, radius, xTarget, yTarget, xSpeed, ySpeed)
@@ -178,8 +157,6 @@ window.addEventListener('DOMContentLoaded', () => {
             element.draw()
         })
         
-        planet1.draw()
-        
         asteroids.forEach(element => {
             element.collisionDetection()
         })
@@ -188,12 +165,11 @@ window.addEventListener('DOMContentLoaded', () => {
             element.increaseSpeed()
         })
 
+        planet1.draw()
         drawHealth()
         drawScore()
         drawTrade()
-
     }
-
 
     function checkClick2(canvas, event) {
         let rect = canvas.getBoundingClientRect();
@@ -205,23 +181,16 @@ window.addEventListener('DOMContentLoaded', () => {
             score = score - 25
             health = health + 25
         }
-
-
     }
 
-
-        canvas.addEventListener("mousedown", function(e)
-        {
-            asteroids.forEach(element => {
-                element.checkClick(canvas, e)
-            })
-            checkClick2(canvas, e)
-        });
+    canvas.addEventListener("mousedown", function(e) {
+        asteroids.forEach(element => {
+            element.checkClick(canvas, e)
+        })
+        checkClick2(canvas, e)
+    })
 
     let interval = setInterval(move, 50)
-
-
-    
 })
 
 // let speedInterval = setInterval(speed, 300)
