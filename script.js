@@ -40,11 +40,26 @@ window.addEventListener('DOMContentLoaded', () => {
             // resets Object position if offscreen
             if (this.xPos > 1300 || this.xPos < -100 || this.yPos > 700 || this.yPos < -100) {
                 this.yPos = Math.floor(Math.random() * 600)
-                this.xPos = -100
-                this.xSpeed = 4
                 this.ySpeed = Math.ceil(Math.random() * 4) - 2
+                // this.xPos = -100
+                // this.ySpeed = Math.ceil(Math.random() * 4) - 2
+                if (this.yPos%2 == 0) {
+                    this.xPos = -100
+                } else {
+                    this.xPos = 1300
+                }
+
+        
             }
         }
+
+        increaseSpeed() {
+            if (this.xSpeed > 0) {
+                this.xSpeed = this.xSpeed + .01
+            } else {
+                this.xSpeed = this.xSpeed - .01
+            }
+        }    
 
         collisionDetection() {
             let distanceXA1 = planet1.xTarget - this.xTarget
@@ -52,9 +67,13 @@ window.addEventListener('DOMContentLoaded', () => {
             let distanceA1 = Math.sqrt(distanceXA1 * distanceXA1 + distanceYA1 * distanceYA1)
             if (distanceA1 < planet1.radius + this.radius) {
                 this.yPos = Math.floor(Math.random() * 600)
-                this.xPos = -100
-                this.xSpeed = 4
                 this.ySpeed = Math.ceil(Math.random() * 4) - 2
+
+                if (this.yPos%2 == 0) {
+                    this.xPos = -100
+                } else {
+                    this.xPos = 1300
+                }
 
             //     health = health - 25 // damage should be equal to the size of the asteroid
             }
@@ -68,10 +87,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
             if (xMousePosition > (this.xTarget - this.radius) && xMousePosition < (this.xTarget + this.radius) && yMousePosition > (this.yTarget - this.radius) && yMousePosition < (this.yTarget + this.radius)) {
                 this.yPos = Math.floor(Math.random() * 600)
-                this.xPos = -100
-                this.xSpeed = 4
                 this.ySpeed = Math.ceil(Math.random() * 4) - 2
 
+                if (this.yPos%2 == 0) {
+                    this.xPos = -100
+                } else {
+                    this.xPos = 1300
+                }
+    
                 // score = score + 10
             }
 
@@ -83,17 +106,24 @@ window.addEventListener('DOMContentLoaded', () => {
     
     var asteroids = []
 
-    for (let i = 0; i < 5; i++) {
-        let xPos = -100
+    for (let i = 0; i < 10; i++) {
         let yPos = Math.floor(Math.random() * 600)
+        let xPos = -100
+        let xSpeed = 3
+        if (yPos%2 == 0) {
+            xPos = -100
+            xSpeed = 3
+        } else {
+            xPos = 1300
+            xSpeed = -3
+        }
         let xSize = Math.floor(Math.random() * 40) + 40
         let ySize = xSize
         let radius = xSize / 2.5 // radius is equal to xSize/2.5
         let xTarget = xPos + (xSize/2) // xTarget is equal to 
         let yTarget = yPos + (ySize/2) // yTarget is equal to 
-        let xSpeed = 3
         let ySpeed = Math.ceil(Math.random() * 4) - 2
-
+        
         let asteroid = new Object(imgAsteroid, xPos, yPos, xSize, ySize, radius, xTarget, yTarget, xSpeed, ySpeed)
         asteroids.push(asteroid)
     }
@@ -109,7 +139,17 @@ window.addEventListener('DOMContentLoaded', () => {
         asteroids.forEach(element => {
             element.collisionDetection()
         })
+        asteroids.forEach(element => {
+            element.increaseSpeed()
+        })
     }
+
+    // function speed () {
+    //     asteroids.forEach(element => {
+    //         element.increaseSpeed()
+    //     })
+    //     console.log(asteroids[0].xSpeed)
+    // }
 
         canvas.addEventListener("mousedown", function(e)
         {
@@ -118,7 +158,8 @@ window.addEventListener('DOMContentLoaded', () => {
             })
         });
 
-    let interval = setInterval(move, 50)
+    // let moveInterval = setInterval(move, 50)
+    // let speedInterval = setInterval(speed, 300)
 
 })
 
