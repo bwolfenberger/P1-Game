@@ -14,21 +14,21 @@ window.addEventListener('DOMContentLoaded', () => {
     
 
 
-    class Asteroid {
+    class Object {
         constructor(imgSrc, xPos, yPos, xSize, ySize, radius, xTarget, yTarget, xSpeed, ySpeed) {
             this.imgSrc = imgSrc
             this.xPos = xPos
             this.yPos = yPos
             this.xSize = xSize
             this.ySize = ySize
-            this.radius = xSize/2.5 // radius is equal to xSize/2.5
+            this.radius = xSize / 2.5 // radius is equal to xSize/2.5
             this.xTarget = xPos + (xSize/2) // xTarget is equal to 
             this.yTarget = yPos + (ySize/2) // yTarget is equal to 
             this.xSpeed = xSpeed
             this.ySpeed = ySpeed
         }
 
-        drawAst() {
+        draw() {
             ctx.beginPath()
             ctx.drawImage(this.imgSrc, this.xPos, this.yPos, this.xSize, this.ySize)
             ctx.fill()
@@ -46,17 +46,17 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        collisionDetectionAst() {
-            let distanceXA1 = planet1.xTarget - a1.xTarget
-            let distanceYA1 = planet1.yTarget - a1.yTarget
+        collisionDetection() {
+            let distanceXA1 = planet1.xTarget - this.xTarget
+            let distanceYA1 = planet1.yTarget - this.yTarget
             let distanceA1 = Math.sqrt(distanceXA1 * distanceXA1 + distanceYA1 * distanceYA1)
-            if (distanceA1 < planet1.radius + a1.radius) {
+            if (distanceA1 < planet1.radius + this.radius) {
                 this.yPos = Math.floor(Math.random() * 600)
                 this.xPos = -100
                 this.xSpeed = 4
                 this.ySpeed = Math.ceil(Math.random() * 4) - 2
 
-            //     health = health - 25
+            //     health = health - 25 // damage should be equal to the size of the asteroid
             }
         }
 
@@ -64,7 +64,6 @@ window.addEventListener('DOMContentLoaded', () => {
             let rect = canvas.getBoundingClientRect();
             let xMousePosition = event.clientX - rect.left;
             let yMousePosition = event.clientY - rect.top;
-            // console.log(`x= ${x} and y= ${y}`)
             console.log(`x click= ${xMousePosition} and y click= ${yMousePosition}`)
 
             if (xMousePosition > (this.xTarget - this.radius) && xMousePosition < (this.xTarget + this.radius) && yMousePosition > (this.yTarget - this.radius) && yMousePosition < (this.yTarget + this.radius)) {
@@ -79,25 +78,44 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
     }
-    let a1 = new Asteroid(imgAsteroid, 50, 50, 50, 50, 0, 0, 0, 3, 2)   
-    // let a2 = new Asteroid(imgAsteroid, 50, 50, 50, 50, 50, 0, 0, 2, 3)   
-    // let a3 = new Asteroid(imgAsteroid, 50, 50, 50, 50, 50, 0, 0, 1, 2)
+    // let a1 = new Object(imgAsteroid, 50, 50, 50, 50, 0, 0, 0, 3, 2)
+    let planet1 = new Object(imgPlanet, 500, 150, 200, 200, 80, 0, 0, 0, 0) 
+    
+    var asteroids = []
 
-    let planet1 = new Asteroid(imgPlanet, 500, 150, 200, 200, 80, 0, 0, 0, 0) 
+    for (let i = 0; i < 5; i++) {
+        let xPos = -100
+        let yPos = Math.floor(Math.random() * 600)
+        let xSize = Math.floor(Math.random() * 40) + 40
+        let ySize = xSize
+        let radius = xSize / 2.5 // radius is equal to xSize/2.5
+        let xTarget = xPos + (xSize/2) // xTarget is equal to 
+        let yTarget = yPos + (ySize/2) // yTarget is equal to 
+        let xSpeed = 3
+        let ySpeed = Math.ceil(Math.random() * 4) - 2
 
+        let asteroid = new Object(imgAsteroid, xPos, yPos, xSize, ySize, radius, xTarget, yTarget, xSpeed, ySpeed)
+        asteroids.push(asteroid)
+    }
 
     function move () {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
-        a1.drawAst()
-        // a2.drawAst()
-        // a3.drawAst()
-        planet1.drawAst()
-        a1.collisionDetectionAst()
+        // a1.draw()
+        asteroids.forEach(element => {
+            element.draw()
+        })
+        planet1.draw()
+        // a1.collisionDetection()
+        asteroids.forEach(element => {
+            element.collisionDetection()
+        })
     }
 
         canvas.addEventListener("mousedown", function(e)
         {
-            a1.checkClick(canvas, e);
+            asteroids.forEach(element => {
+                element.checkClick(canvas, e)
+            })
         });
 
     let interval = setInterval(move, 50)
@@ -199,7 +217,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // }
     
 
-    // function drawAsteroid() {
+    // function draweroid() {
     //     ctx.beginPath()
     //     ctx.drawImage(imgAsteroid, x, y, 50, 50)
     //     ctx.fill()
@@ -211,7 +229,7 @@ window.addEventListener('DOMContentLoaded', () => {
     //         dy = Math.ceil(Math.random() * 4) - 2
     //     }
     // }
-    // function drawAsteroid2() {
+    // function draweroid2() {
     //     ctx.beginPath()
     //     ctx.drawImage(imgAsteroid, x2, y2, 40, 40)
     //     ctx.fill()
@@ -226,13 +244,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // function move () {
     //     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    //     a1.drawAst()
-    //     // a2.drawAst()
-    //     // a3.drawAst()
-    //     planet1.drawAst()
+    //     a1.draw()
+    //     // a2.draw()
+    //     // a3.draw()
+    //     planet1.draw()
     //     a1.collisionDetectionAst()
-    //     drawAsteroid()
-    //     drawAsteroid2()
+    //     draweroid()
+    //     draweroid2()
     //     drawPlanet()
     //     collisionDetection()
     //     drawHealth()
