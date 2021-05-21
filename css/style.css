@@ -12,15 +12,23 @@
     margin-left: -600px;
 }
 
-#startScreen {
+#startText {
     height: 300px;
     width: 600px;
     background-color: gray;
     position: absolute;
     left: 50%;
     margin-left: -300px;
-    top: -50%;
-    margin-top: 150px;
+    top: 50%;
+    margin-top: -150px;
+    text-align: center;
+    border-width: 10px;
+    border-color: greenyellow;
+    border-style: double;
+    border-radius: 50px;
+    color: greenyellow;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
     
 }
 
@@ -30,11 +38,31 @@ canvas {
     position: absolute;
     left: 50%;
     margin-left: -600px;
-    cursor: crosshair;
 }
 
 #planet, #asteroid {
     display: none;
 }
 
+.button {
+    padding: 8px 12px;
+    font-size: 22px;
+    color: #fff;
+    background-color: greenyellow;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 7px #999;
+  }
+  
+  .button:hover {background-color: green}
+  
+  .button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+  }
+
+  * {
+    cursor: crosshair;
+  }
 

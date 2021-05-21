@@ -1,5 +1,11 @@
 window.addEventListener('DOMContentLoaded', () => {
 
+    // On click of start button, start screen is removed and gameplay is initiated
+    document.querySelector('.button').onclick = () => {
+        document.querySelector('.container').style.display = 'none'
+            let interval = setInterval(move, 50)
+    }
+
     let canvas = document.getElementById('myCanvas')
     let ctx = canvas.getContext('2d')
 
@@ -216,7 +222,7 @@ window.addEventListener('DOMContentLoaded', () => {
         checkClick2(canvas, e)
     })
 
-    // let interval = setInterval(move, 50)
+    let interval = setInterval(move, 50)
 })
 
 // let speedInterval = setInterval(speed, 300)
