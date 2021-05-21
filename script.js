@@ -1,15 +1,10 @@
 window.addEventListener('DOMContentLoaded', () => {
 
     // On click of start button, start screen is removed and gameplay is initiated
-    document.querySelector('.button').onclick = () => {
-        document.querySelector('.container').style.display = 'none'
-            music.play()
-            // interval = setInterval(move, 50)
-    }
-
+    
     let canvas = document.getElementById('myCanvas')
     let ctx = canvas.getContext('2d')
-
+    
     let imgAsteroid = document.getElementById('asteroid')
     let imgPlanet = document.getElementById('planet')
     var music = new Audio('/css/music.m4a')
@@ -22,16 +17,20 @@ window.addEventListener('DOMContentLoaded', () => {
     // missAudio2.volume = .1
     hitAudio1.volume = .5
     hitAudio2.volume = .5
-
     let clickCounter = 0
-
-
+    
     let tradeLocationX = 300
     let tradeLocationY = 550
     let health = 100
     let score = 0
     let interval
     
+    document.querySelector('.button').onclick = () => {
+        document.querySelector('.container').style.display = 'none'
+            music.play()
+            interval = setInterval(move, 50)
+    }
+
     function drawTrade() {
         ctx.font = '16px Arial'
         ctx.fillStyle = 'green'
@@ -226,7 +225,7 @@ window.addEventListener('DOMContentLoaded', () => {
         })
         checkClick2(canvas, e)
     })
-    interval = setInterval(move, 50)
+    // interval = setInterval(move, 50)
 
 })
 
