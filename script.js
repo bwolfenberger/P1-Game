@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
 
-    // On click of start button, start screen is removed and gameplay is initiated
     
     let canvas = document.getElementById('myCanvas')
     let ctx = canvas.getContext('2d')
@@ -25,8 +24,15 @@ window.addEventListener('DOMContentLoaded', () => {
     let score = 0
     let interval
     
-    document.querySelector('.button').onclick = () => {
+    // On click of start button, start screen is removed and gameplay is initiated
+    document.querySelector('#startButton').onclick = () => {
         document.querySelector('.container').style.display = 'none'
+            music.play()
+            interval = setInterval(move, 50)
+    }
+
+    document.querySelector('#endButton').onclick = () => {
+        document.querySelector('.endContainer').style.display = 'none'
             music.play()
             interval = setInterval(move, 50)
     }
@@ -104,13 +110,10 @@ window.addEventListener('DOMContentLoaded', () => {
                         element.resetSpeed()
                     })
                     
-                    // document.querySelector('#explosion').style.display = 'inline'
-                    alert('You lose ☠️')
                     clearInterval(interval)
                     health = 100
                     score = 0
-                    interval = setInterval(move, 50)
-
+                    document.querySelector('.endContainer').style.display = 'block'
                 }
             }
         }
