@@ -1,30 +1,25 @@
 window.addEventListener('DOMContentLoaded', () => {
 
-    
     let canvas = document.getElementById('myCanvas')
     let ctx = canvas.getContext('2d')
-    
     let imgAsteroid = document.getElementById('asteroid')
     let imgPlanet = document.getElementById('planet')
     var music = new Audio('/css/music.m4a')
     var endMusic = new Audio('/css/endAudio.m4a')
-    // var missAudio1 = new Audio('/css/miss1.m4a')
-    // var missAudio2 = new Audio('/css/miss2.m4a')
     var hitAudio1 = new Audio('/css/hit1.m4a')
     var hitAudio2 = new Audio('/css/hit2.m4a')
     music.loop = true
-    // missAudio1.volume = .1
-    // missAudio2.volume = .1
+    endMusic.loop = true
     hitAudio1.volume = .5
     hitAudio2.volume = .5
     let clickCounter = 0
-    
     let muteLocationX = 1150
     let muteLocationY = 575
     let health = 100
     let score = 0
     let interval
     
+    // mutes and unmutes audio
     function mutePage() {
         if (music.muted === false) {
             music.muted = true
@@ -36,19 +31,22 @@ window.addEventListener('DOMContentLoaded', () => {
             hitAudio2.muted = false
         } 
     }
-
+    
     // On click of start button, start screen is removed and gameplay is initiated
     document.querySelector('#startButton').onclick = () => {
         document.querySelector('.container').style.display = 'none'
-            music.play()
-            interval = setInterval(move, 50)
-        }
-        
-        document.querySelector('#endButton').onclick = () => {
-            document.querySelector('.endContainer').style.display = 'none'
-            music.muted = false
-            endMusic.muted = true
-            interval = setInterval(move, 50)
+        music.play()
+        interval = setInterval(move, 50)
+    }
+    
+    // On click of restart button, end screen is removed and gameplay is initiated
+    document.querySelector('#endButton').onclick = () => {
+        document.querySelector('.endContainer').style.display = 'none'
+        music.muted = false
+        endMusic.muted = true
+        interval = setInterval(move, 50)
+        health = 100
+        score = 0
     }
 
     function drawMute() {
@@ -56,13 +54,13 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     function drawHealth() {
-        ctx.font = '16px Arial'
+        ctx.font = '16px Orbitron'
         ctx.fillStyle = 'greenyellow'
         ctx.fillText('Health: ' + health, 500, 50)
     }
 
     function drawScore() {
-        ctx.font = '16px Arial'
+        ctx.font = '16px Orbitron'
         ctx.fillStyle = 'red'
         ctx.fillText('Score: ' + score, 650, 50)
     }
@@ -74,9 +72,9 @@ window.addEventListener('DOMContentLoaded', () => {
             this.yPos = yPos
             this.xSize = xSize
             this.ySize = ySize
-            this.radius = xSize / 2.5 // radius is equal to xSize/2.5
-            this.xTarget = xPos + (xSize/2) // xTarget is equal to 
-            this.yTarget = yPos + (ySize/2) // yTarget is equal to 
+            this.radius = xSize / 2.5
+            this.xTarget = xPos + (xSize/2)
+            this.yTarget = yPos + (ySize/2)
             this.xSpeed = xSpeed
             this.ySpeed = ySpeed
         }
@@ -106,13 +104,15 @@ window.addEventListener('DOMContentLoaded', () => {
         }    
 
         collisionDetection() {
-            let distanceXA1 = planet1.xTarget - this.xTarget
-            let distanceYA1 = planet1.yTarget - this.yTarget
+            let distanceXA1 = planet.xTarget - this.xTarget
+            let distanceYA1 = planet.yTarget - this.yTarget
             let distanceA1 = Math.sqrt(distanceXA1 * distanceXA1 + distanceYA1 * distanceYA1)
-            if (distanceA1 < planet1.radius + this.radius) {
+            // if asteroid hits planet
+            if (distanceA1 < planet.radius + this.radius) {
                 this.resetPositions()
                 health = health - Math.round(this.radius) // damage is equal to the size of the asteroid
 
+                // if health reaches 0, initiate end game
                 if (health <= 0) {  
                     asteroids.forEach(element => {
                         element.resetPositions()
@@ -123,16 +123,16 @@ window.addEventListener('DOMContentLoaded', () => {
                     })
                     
                     clearInterval(interval)
-                    health = 100
-                    score = 0
                     document.querySelector('.endContainer').style.display = 'block'
+                    document.querySelector('.endText').innerText = `Final Score: ${score}`
                     music.muted = true
+                    endMusic.muted = false
                     endMusic.play()
                 }
             }
         }
         
-        // resets all asteroid offscreen
+        // resets all asteroids offscreen
         resetPositions() {
             this.yPos = Math.floor(Math.random() * 600)
             this.ySpeed = Math.ceil(Math.random() * 4) - 2
@@ -142,7 +142,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 this.xPos = 1300
             }
         }
-
+        // randomize speed based on yPos variable
         resetSpeed() {
             if (this.yPos%2 == 0) {
                 this.xSpeed = 3
@@ -156,9 +156,11 @@ window.addEventListener('DOMContentLoaded', () => {
             let xMousePosition = event.clientX - rect.left;
             let yMousePosition = event.clientY - rect.top;
 
+            // if click is in the same area as an asteroid, reset position
             if (xMousePosition > (this.xTarget - this.radius) && xMousePosition < (this.xTarget + this.radius) && yMousePosition > (this.yTarget - this.radius) && yMousePosition < (this.yTarget + this.radius)) {
                 this.resetPositions()
 
+                // add audio on click, switches between two audio files to allow for quicker sound
                 if (clickCounter%2 == 0) {
                     hitAudio1.play()
                     clickCounter++
@@ -167,15 +169,15 @@ window.addEventListener('DOMContentLoaded', () => {
                     clickCounter++
                 }
         
-
                 score = score + 10
             }
         }
     }
-    let planet1 = new Object(imgPlanet, 500, 200, 200, 200, 80, 0, 0, 0, 0) 
-    
-    var asteroids = []
 
+    let planet = new Object(imgPlanet, 500, 200, 200, 200, 80, 0, 0, 0, 0) 
+    
+    // creates an array of asteroids with randomized variables
+    var asteroids = []
     for (let i = 0; i < 10; i++) {
         let yPos = Math.floor(Math.random() * 600)
         let xPos = -100
@@ -198,254 +200,46 @@ window.addEventListener('DOMContentLoaded', () => {
         asteroids.push(asteroid)
     }
 
+    // clears canvas then redraws objects
     function move () {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         
+        // loops through asteroid array to redraw each
         asteroids.forEach(element => {
             element.draw()
         })
         
+        // loops through asteroid array to check each for collision
         asteroids.forEach(element => {
             element.collisionDetection()
         })
-
+        
+        // loops through asteroid array to increase each speed
         asteroids.forEach(element => {
             element.increaseSpeed()
         })
 
-        planet1.draw()
+        planet.draw()
         drawHealth()
         drawScore()
         drawMute()
     }
 
+    // checks click for mute button
     function checkClick2(canvas, event) {
         let rect = canvas.getBoundingClientRect();
         let xMousePosition = event.clientX - rect.left;
         let yMousePosition = event.clientY - rect.top;
-        console.log(`x click= ${xMousePosition} and y click= ${yMousePosition}`)
-        // if (clickCounter%2 == 0) {
-        //     missAudio1.play()
-        //     clickCounter++
-        // } else if (clickCounter%2 == 1) {
-        //     missAudio2.play()
-        //     clickCounter++
-        // }
 
         if (xMousePosition > (muteLocationX) && xMousePosition< (muteLocationX + 25) && yMousePosition < (muteLocationY) && yMousePosition > (muteLocationY - 20)) {
             mutePage()
         }
     }
-
+    // check click for each asteroid
     canvas.addEventListener("mousedown", function(e) {
         asteroids.forEach(element => {
             element.checkClick(canvas, e)
         })
         checkClick2(canvas, e)
     })
-    // interval = setInterval(move, 50)
-
 })
-
-// let speedInterval = setInterval(speed, 300)
-
-    // let x = -100
-    // let y = Math.floor(Math.random() * 600)
-    // let dx = 2
-    // let dy = 0
-
-    // let x2 = -100
-    // let y2 = Math.floor(Math.random() * 600)
-    // let dx2 = 2
-    // let dy2 = -2
-
-    // // circle colllision detection
-    // let planetTarget = {radius: 80, x: 600, y: 250}
-    // let asteroidTarget = {radius: 20, x: x, y: y}
-    // let distanceX = planetTarget.x - asteroidTarget.x
-    // let distanceY = planetTarget.y - asteroidTarget.y
-    // let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY)
-    
-    // let asteroid2Target = {radius: 17, x: x2, y: y2}
-    // let distance2X = planetTarget.x - asteroid2Target.x
-    // let distance2Y = planetTarget.y - asteroid2Target.y
-    // let distance2 = Math.sqrt(distance2X * distance2X + distance2Y * distance2Y)
-
-    // let planetX = 500
-    // let planetY = 150
-
-
-
-
-    // function drawPlanet () {
-    //     ctx.beginPath()
-    //     ctx.drawImage(imgPlanet, planetX, planetY, 200, 200)
-    //     ctx.closePath()
-    // }
-
-
-
-    // function drawShield() {
-    //     ctx.font = '16px Arial'
-    //     ctx.fillStyle = 'green'
-    //     ctx.fillText('Trade 25 health for 25 points', shieldLocationX, shieldLocationY)
-    // }
-
-    // function drawHealth() {
-    //     ctx.font = '16px Arial'
-    //     ctx.fillStyle = 'red'
-    //     ctx.fillText('Health: ' + health, 550, 550)
-    // }
-    // function drawScore() {
-    //     ctx.font = '16px Arial'
-    //     ctx.fillStyle = 'red'
-    //     ctx.fillText('Score: ' + score, 700, 550)
-    // }
-
-    // function collisionDetection() {
-    //     planetTarget = {radius: 80, x: 600, y: 250}
-    //     asteroidTarget = {radius: 20, x: x, y: y}
-    //     distanceX = planetTarget.x - asteroidTarget.x
-    //     distanceY = planetTarget.y - asteroidTarget.y
-    //     distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY)
-    //     if (distance < planetTarget.radius + asteroidTarget.radius) {
-    //         y = Math.floor(Math.random() * 600)
-    //         x = -100
-    //         dx = 4
-    //         dy = Math.ceil(Math.random() * 4) - 2
-    //         health = health - 25
-    //     }
-
-    //     asteroid2Target = {radius: 17, x: x2, y: y2}
-    //     distance2X = planetTarget.x - asteroid2Target.x
-    //     distance2Y = planetTarget.y - asteroid2Target.y
-    //     distance2 = Math.sqrt(distance2X * distance2X + distance2Y * distance2Y)
-    //     if (distance2 < planetTarget.radius + asteroid2Target.radius) {
-    //         y2 = Math.floor(Math.random() * 600)
-    //         x2 = -100
-    //         dx2 = 4
-    //         dy2 = Math.ceil(Math.random() * 4) - 2
-    //         health = health - 25
-    //     }   
-    //     if (health === 0) {
-    //         alert('You lose ☠️')
-    //         clearInterval(interval)
-    //         interval = setInterval(move, 10)
-    //         health = 100
-    //         score = 0
-    //     }
-    // }
-
-    // function drawPlanet () {
-    //     ctx.beginPath()
-    //     ctx.drawImage(imgPlanet, planetX, planetY, 200, 200)
-    //     ctx.closePath()
-    // }
-    
-
-    // function draweroid() {
-    //     ctx.beginPath()
-    //     ctx.drawImage(imgAsteroid, x, y, 50, 50)
-    //     ctx.fill()
-    //     ctx.closePath()
-    //     if (x > 1300 || x < -100 || y > 700 || y < -100) {
-    //         y = Math.floor(Math.random() * 600)
-    //         x = 0
-    //         dx = 4
-    //         dy = Math.ceil(Math.random() * 4) - 2
-    //     }
-    // }
-    // function draweroid2() {
-    //     ctx.beginPath()
-    //     ctx.drawImage(imgAsteroid, x2, y2, 40, 40)
-    //     ctx.fill()
-    //     ctx.closePath()
-    //     if (x2 > 1300 || x2 < -100 || y2 > 700 || y2 < -100) {
-    //         y2 = Math.floor(Math.random() * 600)
-    //         x2 = 0
-    //         dx2 = 4
-    //         dy2 = Math.ceil(Math.random() * 4) - 2
-    //     }
-    // }
-
-    // function move () {
-    //     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    //     a1.draw()
-    //     // a2.draw()
-    //     // a3.draw()
-    //     planet1.draw()
-    //     a1.collisionDetectionAst()
-    //     draweroid()
-    //     draweroid2()
-    //     drawPlanet()
-    //     collisionDetection()
-    //     drawHealth()
-    //     drawScore()
-    //     drawShield()
-    //     x += dx
-    //     y += dy
-    //     x2 += dx2
-    //     y2 += dy2
-
-    // }
-
-    // repositions the asteroids on click
-    // function checkClick(canvas, event) {
-    //     let rect = canvas.getBoundingClientRect();
-    //     let xPosition = event.clientX - rect.left;
-    //     let yPosition = event.clientY - rect.top;
-    //     // console.log(`x= ${x} and y= ${y}`)
-    //     console.log(`x click= ${xPosition} and y click= ${yPosition}`)
-
-    //     if (xPosition > (x) && xPosition< (x + 30) && yPosition > (y) && yPosition < (y + 30)) {
-    //         y = Math.floor(Math.random() * 600)
-    //         x = -100
-    //         dx = 4
-    //         dy = Math.ceil(Math.random() * 4) - 2
-    //         score = score + 10
-    //     }
-    //     if (xPosition > (x2) && xPosition< (x2 + 30) && yPosition > (y2) && yPosition < (y2 + 30)) {
-    //         y2 = Math.floor(Math.random() * 600)
-    //         x2 = -100
-    //         dx2 = 4
-    //         dy2 = Math.ceil(Math.random() * 4) - 2
-    //         score = score + 10
-    //     }
-    //     if (score >= 25) {
-    //         if (xPosition > (shieldLocationX) && xPosition< (shieldLocationX + 200) && yPosition < (shieldLocationY) && yPosition > (shieldLocationY - 20)) {
-    //             score = score - 25
-    //             health = health + 25
-    //         }
-    //     }    
-    // }
-          
-    //     canvas.addEventListener("mousedown", function(e)
-    //     {
-    //         a1.checkClick(canvas, e);
-    //     });
-
-    // let interval = setInterval(move, 50)
-
-
-
-
-    // Create ctxs
-    // Add movement
-    // Add ability to remove when clicked
-
-
-    // Create Planet
-    // Add health attribute
-
-    // Create colision detection
-    // Decrease health upon colision
-
-
-// })
-
-
-
-
-
-
-

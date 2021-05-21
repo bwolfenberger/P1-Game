@@ -7,7 +7,7 @@
     position: relative;
 }
 
-#startScreen {
+#startScreen, #endScreen {
     height: 600px;
     width: 1200px;
     background-color: rgba(0, 0, 0, .5);
@@ -16,23 +16,35 @@
     margin-left: -600px;
 }
 
-#startText {
-    height: 300px;
-    width: 600px;
+.startText {
+    height: 350px;
+    width: 700px;
     background-color: gray;
     position: absolute;
     left: 50%;
-    margin-left: -300px;
+    margin-left: -350px;
     top: 50%;
-    margin-top: -150px;
+    margin-top: -195px;
     text-align: center;
     border-width: 10px;
     border-color: greenyellow;
     border-style: double;
     border-radius: 50px;
     color: greenyellow;
-    font-family: 'Orbitron', sans-serif;
     font-size: 14px;
+}
+
+.endText {
+    height: 350px;
+    width: 700px;
+    position: absolute;
+    left: 50%;
+    margin-left: -350px;
+    top: 50%;
+    margin-top: -195px;
+    text-align: center;
+    color: greenyellow;
+    font-size: 24px;
 }
 
 .endContainer {
@@ -40,20 +52,12 @@
     display: none;
 }
 
-#endScreen {
-    height: 600px;
-    width: 1200px;
-    position: absolute;
-    left: 50%;
-    margin-left: -600px;
-}
 #explosion {
     height: 600px;
     width: 1200px;
     background-color: gray;
     position: absolute;
 }
-
 
 canvas {
     background: url('./space.jpg') no-repeat center;
@@ -77,10 +81,9 @@ canvas {
     box-shadow: 0 7px #999;
     position: relative;
     left: 50%;
-    margin-left: -100px;
+    margin-left: -75px;
     top: 50%;
     margin-top: 400px;
-
   }
   
   .button:hover {background-color: green}
