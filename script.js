@@ -5,7 +5,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
     let imgAsteroid = document.getElementById('asteroid')
     let imgPlanet = document.getElementById('planet')
-    
+    var missAudio1 = new Audio('/css/miss1.m4a')
+    var missAudio2 = new Audio('/css/miss2.m4a')
+    var hitAudio1 = new Audio('/css/hit1.m4a')
+    var hitAudio2 = new Audio('/css/hit2.m4a')
+    missAudio1.volume = .1
+    missAudio2.volume = .1
+    hitAudio1.volume = .5
+    hitAudio2.volume = .5
+
+    let clickCounter = 0
+
+
     let tradeLocationX = 300
     let tradeLocationY = 550
     let health = 100
@@ -120,6 +131,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
             if (xMousePosition > (this.xTarget - this.radius) && xMousePosition < (this.xTarget + this.radius) && yMousePosition > (this.yTarget - this.radius) && yMousePosition < (this.yTarget + this.radius)) {
                 this.resetPositions()
+
+                if (clickCounter%2 == 0) {
+                    hitAudio1.play()
+                } else if (clickCounter%2 == 1) {
+                    hitAudio2.play()
+                }
+        
+
                 score = score + 10
             }
         }
@@ -176,6 +195,13 @@ window.addEventListener('DOMContentLoaded', () => {
         let xMousePosition = event.clientX - rect.left;
         let yMousePosition = event.clientY - rect.top;
         console.log(`x click= ${xMousePosition} and y click= ${yMousePosition}`)
+        if (clickCounter%2 == 0) {
+            missAudio1.play()
+            clickCounter++
+        } else if (clickCounter%2 == 1) {
+            missAudio2.play()
+            clickCounter++
+        }
 
         if (score >= 25 && xMousePosition > (tradeLocationX) && xMousePosition< (tradeLocationX + 200) && yMousePosition < (tradeLocationY) && yMousePosition > (tradeLocationY - 20)) {
             score = score - 25
@@ -190,7 +216,7 @@ window.addEventListener('DOMContentLoaded', () => {
         checkClick2(canvas, e)
     })
 
-    let interval = setInterval(move, 50)
+    // let interval = setInterval(move, 50)
 })
 
 // let speedInterval = setInterval(speed, 300)
