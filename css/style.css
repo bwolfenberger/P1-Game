@@ -3,6 +3,15 @@
     position: relative;
 }
 
+#explosion {
+    height: 600px;
+    width: 1200px;
+    position: absolute;
+    left: 50%;
+    margin-left: -600px;
+    display: none;
+}
+
 #startScreen {
     height: 600px;
     width: 1200px;
@@ -46,12 +55,13 @@ canvas {
 
 .button {
     padding: 8px 12px;
-    font-size: 22px;
+    font-size: 21px;
     color: #fff;
     background-color: greenyellow;
     border: none;
     border-radius: 15px;
     box-shadow: 0 7px #999;
+    font-family: 'Orbitron', sans-serif;
   }
   
   .button:hover {background-color: green}

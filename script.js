@@ -3,7 +3,8 @@ window.addEventListener('DOMContentLoaded', () => {
     // On click of start button, start screen is removed and gameplay is initiated
     document.querySelector('.button').onclick = () => {
         document.querySelector('.container').style.display = 'none'
-            let interval = setInterval(move, 50)
+            music.play()
+            // interval = setInterval(move, 50)
     }
 
     let canvas = document.getElementById('myCanvas')
@@ -11,12 +12,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
     let imgAsteroid = document.getElementById('asteroid')
     let imgPlanet = document.getElementById('planet')
-    var missAudio1 = new Audio('/css/miss1.m4a')
-    var missAudio2 = new Audio('/css/miss2.m4a')
+    var music = new Audio('/css/music.m4a')
+    // var missAudio1 = new Audio('/css/miss1.m4a')
+    // var missAudio2 = new Audio('/css/miss2.m4a')
     var hitAudio1 = new Audio('/css/hit1.m4a')
     var hitAudio2 = new Audio('/css/hit2.m4a')
-    missAudio1.volume = .1
-    missAudio2.volume = .1
+    music.loop = true
+    // missAudio1.volume = .1
+    // missAudio2.volume = .1
     hitAudio1.volume = .5
     hitAudio2.volume = .5
 
@@ -27,6 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
     let tradeLocationY = 550
     let health = 100
     let score = 0
+    let interval
     
     function drawTrade() {
         ctx.font = '16px Arial'
@@ -101,6 +105,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         element.resetSpeed()
                     })
                     
+                    // document.querySelector('#explosion').style.display = 'inline'
                     alert('You lose ☠️')
                     clearInterval(interval)
                     health = 100
@@ -201,13 +206,13 @@ window.addEventListener('DOMContentLoaded', () => {
         let xMousePosition = event.clientX - rect.left;
         let yMousePosition = event.clientY - rect.top;
         console.log(`x click= ${xMousePosition} and y click= ${yMousePosition}`)
-        if (clickCounter%2 == 0) {
-            missAudio1.play()
-            clickCounter++
-        } else if (clickCounter%2 == 1) {
-            missAudio2.play()
-            clickCounter++
-        }
+        // if (clickCounter%2 == 0) {
+        //     missAudio1.play()
+        //     clickCounter++
+        // } else if (clickCounter%2 == 1) {
+        //     missAudio2.play()
+        //     clickCounter++
+        // }
 
         if (score >= 25 && xMousePosition > (tradeLocationX) && xMousePosition< (tradeLocationX + 200) && yMousePosition < (tradeLocationY) && yMousePosition > (tradeLocationY - 20)) {
             score = score - 25
@@ -221,8 +226,8 @@ window.addEventListener('DOMContentLoaded', () => {
         })
         checkClick2(canvas, e)
     })
+    interval = setInterval(move, 50)
 
-    let interval = setInterval(move, 50)
 })
 
 // let speedInterval = setInterval(speed, 300)
