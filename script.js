@@ -7,6 +7,7 @@ window.addEventListener('DOMContentLoaded', () => {
     let imgAsteroid = document.getElementById('asteroid')
     let imgPlanet = document.getElementById('planet')
     var music = new Audio('/css/music.m4a')
+    var endMusic = new Audio('/css/endAudio.m4a')
     // var missAudio1 = new Audio('/css/miss1.m4a')
     // var missAudio2 = new Audio('/css/miss2.m4a')
     var hitAudio1 = new Audio('/css/hit1.m4a')
@@ -18,41 +19,52 @@ window.addEventListener('DOMContentLoaded', () => {
     hitAudio2.volume = .5
     let clickCounter = 0
     
-    let tradeLocationX = 300
-    let tradeLocationY = 550
+    let muteLocationX = 1150
+    let muteLocationY = 575
     let health = 100
     let score = 0
     let interval
     
+    function mutePage() {
+        if (music.muted === false) {
+            music.muted = true
+            hitAudio1.muted = true
+            hitAudio2.muted = true
+        } else {
+            music.muted = false
+            hitAudio1.muted = false
+            hitAudio2.muted = false
+        } 
+    }
+
     // On click of start button, start screen is removed and gameplay is initiated
     document.querySelector('#startButton').onclick = () => {
         document.querySelector('.container').style.display = 'none'
             music.play()
             interval = setInterval(move, 50)
-    }
-
-    document.querySelector('#endButton').onclick = () => {
-        document.querySelector('.endContainer').style.display = 'none'
-            music.play()
+        }
+        
+        document.querySelector('#endButton').onclick = () => {
+            document.querySelector('.endContainer').style.display = 'none'
+            music.muted = false
+            endMusic.muted = true
             interval = setInterval(move, 50)
     }
 
-    function drawTrade() {
-        ctx.font = '16px Arial'
-        ctx.fillStyle = 'green'
-        ctx.fillText('Trade 25 health for 25 points', tradeLocationX, tradeLocationY)
+    function drawMute() {
+        ctx.fillText('🔇', muteLocationX, muteLocationY)
     }
 
     function drawHealth() {
         ctx.font = '16px Arial'
-        ctx.fillStyle = 'red'
-        ctx.fillText('Health: ' + health, 550, 550)
+        ctx.fillStyle = 'greenyellow'
+        ctx.fillText('Health: ' + health, 500, 50)
     }
 
     function drawScore() {
         ctx.font = '16px Arial'
         ctx.fillStyle = 'red'
-        ctx.fillText('Score: ' + score, 700, 550)
+        ctx.fillText('Score: ' + score, 650, 50)
     }
 
     class Object {
@@ -114,6 +126,8 @@ window.addEventListener('DOMContentLoaded', () => {
                     health = 100
                     score = 0
                     document.querySelector('.endContainer').style.display = 'block'
+                    music.muted = true
+                    endMusic.play()
                 }
             }
         }
@@ -147,8 +161,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 if (clickCounter%2 == 0) {
                     hitAudio1.play()
+                    clickCounter++
                 } else if (clickCounter%2 == 1) {
                     hitAudio2.play()
+                    clickCounter++
                 }
         
 
@@ -156,7 +172,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-    let planet1 = new Object(imgPlanet, 500, 150, 200, 200, 80, 0, 0, 0, 0) 
+    let planet1 = new Object(imgPlanet, 500, 200, 200, 200, 80, 0, 0, 0, 0) 
     
     var asteroids = []
 
@@ -200,7 +216,7 @@ window.addEventListener('DOMContentLoaded', () => {
         planet1.draw()
         drawHealth()
         drawScore()
-        drawTrade()
+        drawMute()
     }
 
     function checkClick2(canvas, event) {
@@ -216,9 +232,8 @@ window.addEventListener('DOMContentLoaded', () => {
         //     clickCounter++
         // }
 
-        if (score >= 25 && xMousePosition > (tradeLocationX) && xMousePosition< (tradeLocationX + 200) && yMousePosition < (tradeLocationY) && yMousePosition > (tradeLocationY - 20)) {
-            score = score - 25
-            health = health + 25
+        if (xMousePosition > (muteLocationX) && xMousePosition< (muteLocationX + 25) && yMousePosition < (muteLocationY) && yMousePosition > (muteLocationY - 20)) {
+            mutePage()
         }
     }
 
