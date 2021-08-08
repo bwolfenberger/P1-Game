@@ -1,5 +1,6 @@
+// Wait for DOM to load before running script
 window.addEventListener('DOMContentLoaded', () => {
-
+    // Set variables
     let canvas = document.getElementById('myCanvas')
     let ctx = canvas.getContext('2d')
     let imgAsteroid = document.getElementById('asteroid')
@@ -19,7 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
     let score = 0
     let interval
     
-    // mutes and unmutes audio
+    // Mutes and unmutes audio
     function mutePage() {
         if (music.muted === false) {
             music.muted = true
@@ -49,22 +50,26 @@ window.addEventListener('DOMContentLoaded', () => {
         score = 0
     }
 
+    // Display mute icon
     function drawMute() {
         ctx.fillText('🔇', muteLocationX, muteLocationY)
     }
-
+    
+    // Display current health
     function drawHealth() {
         ctx.font = '16px Orbitron'
         ctx.fillStyle = 'greenyellow'
         ctx.fillText('Health: ' + health, 500, 50)
     }
-
+    
+    // Display current score
     function drawScore() {
         ctx.font = '16px Orbitron'
         ctx.fillStyle = 'red'
         ctx.fillText('Score: ' + score, 650, 50)
     }
 
+    //<-- Main object constructor -->
     class Object {
         constructor(imgSrc, xPos, yPos, xSize, ySize, radius, xTarget, yTarget, xSpeed, ySpeed) {
             this.imgSrc = imgSrc
@@ -79,6 +84,7 @@ window.addEventListener('DOMContentLoaded', () => {
             this.ySpeed = ySpeed
         }
 
+        // Display object function
         draw() {
             ctx.beginPath()
             ctx.drawImage(this.imgSrc, this.xPos, this.yPos, this.xSize, this.ySize)
@@ -94,7 +100,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // increased speed of asteroids each interval
+        // Increased speed of asteroids each interval
         increaseSpeed() {
             if (this.xSpeed > 0) {
                 this.xSpeed = this.xSpeed + .01
@@ -103,16 +109,18 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }    
 
+        // Function to determine if the asteroids hit the planet
         collisionDetection() {
             let distanceXA1 = planet.xTarget - this.xTarget
             let distanceYA1 = planet.yTarget - this.yTarget
             let distanceA1 = Math.sqrt(distanceXA1 * distanceXA1 + distanceYA1 * distanceYA1)
-            // if asteroid hits planet
+            // If asteroid hits planet
             if (distanceA1 < planet.radius + this.radius) {
                 this.resetPositions()
-                health = health - Math.round(this.radius) // damage is equal to the size of the asteroid
+                // Reduce health equal to size of the asteroid
+                health = health - Math.round(this.radius)
 
-                // if health reaches 0, initiate end game
+                // If health reaches 0, initiate end game
                 if (health <= 0) {  
                     asteroids.forEach(element => {
                         element.resetPositions()
@@ -122,6 +130,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         element.resetSpeed()
                     })
                     
+                    // Display end game screen
                     clearInterval(interval)
                     document.querySelector('.endContainer').style.display = 'block'
                     document.querySelector('.endText').innerText = `Final Score: ${score}`
@@ -132,7 +141,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // resets all asteroids offscreen
+        // Reset all asteroids offscreen
         resetPositions() {
             this.yPos = Math.floor(Math.random() * 600)
             this.ySpeed = Math.ceil(Math.random() * 4) - 2
@@ -142,7 +151,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 this.xPos = 1300
             }
         }
-        // randomize speed based on yPos variable
+        // Randomize speed based on yPos variable
         resetSpeed() {
             if (this.yPos%2 == 0) {
                 this.xSpeed = 3
@@ -151,12 +160,13 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Check position of click
         checkClick(canvas, event) {
             let rect = canvas.getBoundingClientRect();
             let xMousePosition = event.clientX - rect.left;
             let yMousePosition = event.clientY - rect.top;
 
-            // if click is in the same area as an asteroid, reset position
+            // If click is in the same area as an asteroid, reset position of asteroid
             if (xMousePosition > (this.xTarget - this.radius) && xMousePosition < (this.xTarget + this.radius) && yMousePosition > (this.yTarget - this.radius) && yMousePosition < (this.yTarget + this.radius)) {
                 this.resetPositions()
 
@@ -168,16 +178,19 @@ window.addEventListener('DOMContentLoaded', () => {
                     hitAudio2.play()
                     clickCounter++
                 }
-        
+                
+                // Increase score
                 score = score + 10
             }
         }
     }
 
+    // Initiate planet variable
     let planet = new Object(imgPlanet, 500, 200, 200, 200, 80, 0, 0, 0, 0) 
     
-    // creates an array of asteroids with randomized variables
+    // Creates an array of asteroids with randomized variables
     var asteroids = []
+    // Number of asteroids is determined by how many iterations of the for loop
     for (let i = 0; i < 10; i++) {
         let yPos = Math.floor(Math.random() * 600)
         let xPos = -100
@@ -196,25 +209,27 @@ window.addEventListener('DOMContentLoaded', () => {
         let yTarget = yPos + (ySize/2)
         let ySpeed = Math.ceil(Math.random() * 4) - 2
         
+        // Initiate asteroid variable
         let asteroid = new Object(imgAsteroid, xPos, yPos, xSize, ySize, radius, xTarget, yTarget, xSpeed, ySpeed)
+        // Add asteroid to asteroids array
         asteroids.push(asteroid)
     }
 
-    // clears canvas then redraws objects
+    // Clears canvas then redraws objects
     function move () {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         
-        // loops through asteroid array to redraw each
+        // Loops through asteroid array to redraw each
         asteroids.forEach(element => {
             element.draw()
         })
         
-        // loops through asteroid array to check each for collision
+        // Loops through asteroid array to check each for collision
         asteroids.forEach(element => {
             element.collisionDetection()
         })
         
-        // loops through asteroid array to increase each speed
+        // Loops through asteroid array to increase each speed
         asteroids.forEach(element => {
             element.increaseSpeed()
         })
@@ -225,7 +240,7 @@ window.addEventListener('DOMContentLoaded', () => {
         drawMute()
     }
 
-    // checks click for mute button
+    // Check click for mute button
     function checkClick2(canvas, event) {
         let rect = canvas.getBoundingClientRect();
         let xMousePosition = event.clientX - rect.left;
@@ -235,7 +250,7 @@ window.addEventListener('DOMContentLoaded', () => {
             mutePage()
         }
     }
-    // check click for each asteroid
+    // Check click for each asteroid
     canvas.addEventListener("mousedown", function(e) {
         asteroids.forEach(element => {
             element.checkClick(canvas, e)
